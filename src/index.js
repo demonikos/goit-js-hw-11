@@ -2,9 +2,7 @@ import { fetchQuery } from './fetchQuery';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import axios from 'axios';
 
-// const axios = require('axios');
 const searchForm = document.querySelector('.search-form');
 const searchInput = document.querySelector('.form-input');
 const gallery = document.querySelector('.gallery');
@@ -14,16 +12,6 @@ let lightbox = new SimpleLightbox('.gallery div a', {
   captionDelay: 250,
   scrollZoom: false,
 });
-
-// // import { fetchCountries } from './fetchCountries';
-// import { Notify } from 'notiflix/build/notiflix-notify-aio';
-// import debounce from 'lodash.debounce';
-
-// const DEBOUNCE_DELAY = 300;
-
-// const countryList = document.querySelector('.country-list');
-// const countryInfo = document.querySelector('.country-info');
-// const countryInput = document.querySelector('#search-box');
 
 // countryInput.addEventListener('input', debounce(inputHandler, DEBOUNCE_DELAY));
 
@@ -67,69 +55,8 @@ let lightbox = new SimpleLightbox('.gallery div a', {
 // }
 // }
 
-// function createCountryMarkup(obj){
-//     // fetchCountries(obj);
-//     return obj.map(({name: {official}, capital, languages, population, flags: {svg},}) => {
-//         const langValues = Object.values(languages).join(', ');
-//         return (`
-//             <div class = "country-wrap">
-//             <img class = "solo-img" src="${svg}" alt="">
-//             <h2>${official}</h2>
-//             </div>
-//             <ul>
-//             <li class="country-data"><span>Capital</span>: ${capital}</li>
-//             <li class="country-data"><span>Population</span>: ${population}</h3>
-//             <li class="country-data"><span>Languages</span>: ${langValues}</li>
-//             </ul>
-//             `)
-//     }).join('');
-// }
-
-// function createFewCountriesMarkup(obj){
-//     return obj.map(({name: {official}, flags: {svg},}) => {
-//         return (`
-//         <div class = "country-wrap">
-//         <img class = "solo-img" src="${svg}" alt="">
-//         <h2>${official}</h2>
-//         </div>
-//         `)
-//     }).join('');
-// }
-
-// function clearMarkups(){
-//     countryInfo.innerHTML = "";
-//     countryList.innerHTML = "";
-// }
 
 // -----------------------------//--------------------------
-
-// function fetchQuery(query) {
-//   const BASE_URL = 'https://pixabay.com/api/';
-//   const KEY = '36718920-ea0d15de6c7dfa9439d7f0740';
-//   const params = new URLSearchParams({
-//     image_type: 'photo',
-//     orientation: 'horizontal',
-//     safesearch: 'false',
-//     per_page: '40',
-//     page: '2',
-//   });
-
-//   // const inp = 'cat';
-
-//   return (
-//     axios
-//       .get(`${BASE_URL}?key=${KEY}&q=${query}&${params}`)
-//       .then(response => {
-//         // console.log(response);
-//         return response;
-//       })
-//       // .then(data => data)
-//       .catch(error => {
-//         Notify.failure(error.message);
-//         // console.error();
-//       })
-//   );
-// }
 
 searchForm.addEventListener('submit', event => {
   event.preventDefault();
