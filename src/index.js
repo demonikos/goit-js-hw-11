@@ -8,7 +8,6 @@ const searchInput = document.querySelector('.form-input');
 const gallery = document.querySelector('.gallery');
 const marker = document.querySelector('.marker');
 
-
 const options = {
   rootMargin: '0px',
   threshold: 1
@@ -23,6 +22,8 @@ let lightbox = new SimpleLightbox('.gallery div a', {
   captionDelay: 250,
   scrollZoom: false,
 });
+
+let page = 0;
 
 searchForm.addEventListener('submit', onSubmit);
 
