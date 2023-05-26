@@ -1,4 +1,4 @@
-import { fetchQuery } from './src/js/fetchQuery';
+import { fetchQuery, PER_PAGE } from './src/js/fetchQuery';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import { Notify } from 'notiflix';
@@ -8,6 +8,15 @@ const searchInput = document.querySelector('.form-input');
 const gallery = document.querySelector('.gallery');
 const marker = document.querySelector('.marker');
 
+
+const options = {
+  rootMargin: '0px',
+  threshold: 1
+}
+
+const observer = new IntersectionObserver(observerCallback, options);
+// const lastGalleryElem = new IntersectionObserver(lastElemObserver, options);
+
 let lightbox = new SimpleLightbox('.gallery div a', {
   captionsData: 'alt',
   captionPosition: 'bottom',
@@ -15,25 +24,21 @@ let lightbox = new SimpleLightbox('.gallery div a', {
   scrollZoom: false,
 });
 
-// -----------------------------//--------------------------
-
 searchForm.addEventListener('submit', onSubmit);
 
 function onSubmit(event) {
   event.preventDefault();
   gallery.innerHTML = '';
-  // console.log(`before trim - ${searchInput.value}`)
   page = 1;
+  observer.unobserve(marker);
   const value = searchInput.value.trim();
   // console.log(`after trim - ${value}`)
   if (value !== '') {
     fetchQuery(value, page)
       .then(response => {
-        console.log(response);
-        // gallery.innerHTML = markup(response);
         if (response.data.totalHits > 0) {
           Notify.success(`Hooray! We found ${response.data.totalHits} images.`);
-          gallery.innerHTML = markup(response);
+          gallery.insertAdjacentHTML('beforeend', markup(response));
           lightbox.refresh();
         } else {
           Notify.warning(
@@ -44,6 +49,7 @@ function onSubmit(event) {
       .catch(error => console.log(error))
       .finally(() => {
         lightbox.refresh();
+        observer.observe(marker);
       });
   } else {
     Notify.info(
@@ -94,15 +100,6 @@ function markup(obj) {
     .join('');
 }
 
-// const { height: cardHeight } = document
-//   .querySelector('.gallery')
-//   .firstElementChild.getBoundingClientRect();
-
-// window.scrollBy({
-//   top: cardHeight * 2,
-//   behavior: 'smooth',
-// });
-
 function smoothScroll(gallery, step) {
   const { height: cardHeight } =
     gallery.firstElementChild.getBoundingClientRect();
@@ -111,3 +108,49 @@ function smoothScroll(gallery, step) {
     behavior: 'smooth',
   });
 }
+
+function observerCallback(entries){
+  entries.forEach(entry => {
+    if (entry.isIntersecting === true) {
+      page +=1;
+      fetchQuery(searchInput.value, page)
+      .then(response => {
+        // console.log(response);
+          // Notify.success(`Hooray! We found ${response.data.totalHits} images.`);
+          gallery.insertAdjacentHTML('beforeend', markup(response));
+          console.log(response);
+          const lastPage = Math.ceil(response.data.totalHits / PER_PAGE);
+          console.log(lastPage);
+          // lightbox.refresh();
+          smoothScroll(gallery, 2)
+          if (page === lastPage){
+            observer.unobserve(marker);
+            Notify.info(`We're sorry, but you've reached the end of search results.`);
+          }
+      })
+      .catch(error => console.log(error))
+      .finally(() => {
+        lightbox.refresh();
+      });
+    }
+  })
+}
+
+// function lastElemObserver(entries){
+//   entries.forEach(entry => {
+//     if (entry.isIntersecting === true){
+//       Notify.info(`We're sorry, but you've reached the end of search results.`);
+//       lastElem.unobserve(lastElemMarker);
+//     }
+//   })
+// }
+
+// function scrollTracking(entries) {
+//   entries.forEach(entry => )
+// }
+
+// const newObserver = new IntersectionObserver(scrollTracking, {
+//     threshold: 1
+// });
+
+// newObserver.observe(gallery.lastElementChild);
