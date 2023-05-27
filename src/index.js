@@ -2,6 +2,7 @@ import { fetchQuery, PER_PAGE } from './src/js/fetchQuery';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import { Notify } from 'notiflix';
+// import debounce from 'lodash.debounce';
 
 const searchForm = document.querySelector('.search-form');
 const searchInput = document.querySelector('.form-input');
@@ -14,7 +15,6 @@ const options = {
 }
 
 const observer = new IntersectionObserver(observerCallback, options);
-// const lastGalleryElem = new IntersectionObserver(lastElemObserver, options);
 
 let lightbox = new SimpleLightbox('.gallery div a', {
   captionsData: 'alt',
@@ -33,7 +33,6 @@ function onSubmit(event) {
   page = 1;
   observer.unobserve(marker);
   const value = searchInput.value.trim();
-  // console.log(`after trim - ${value}`)
   if (value !== '') {
     fetchQuery(value, page)
       .then(response => {
@@ -116,17 +115,12 @@ function observerCallback(entries){
       page +=1;
       fetchQuery(searchInput.value, page)
       .then(response => {
-        // console.log(response);
-          // Notify.success(`Hooray! We found ${response.data.totalHits} images.`);
           gallery.insertAdjacentHTML('beforeend', markup(response));
-          console.log(response);
           const lastPage = Math.ceil(response.data.totalHits / PER_PAGE);
-          console.log(lastPage);
-          // lightbox.refresh();
           smoothScroll(gallery, 2)
           if (page === lastPage){
-            observer.unobserve(marker);
-            Notify.info(`We're sorry, but you've reached the end of search results.`);
+              observer.unobserve(marker);
+            Notify.info(`We're sorry, but you've reached the end of search results.`);            
           }
       })
       .catch(error => console.log(error))
@@ -136,22 +130,3 @@ function observerCallback(entries){
     }
   })
 }
-
-// function lastElemObserver(entries){
-//   entries.forEach(entry => {
-//     if (entry.isIntersecting === true){
-//       Notify.info(`We're sorry, but you've reached the end of search results.`);
-//       lastElem.unobserve(lastElemMarker);
-//     }
-//   })
-// }
-
-// function scrollTracking(entries) {
-//   entries.forEach(entry => )
-// }
-
-// const newObserver = new IntersectionObserver(scrollTracking, {
-//     threshold: 1
-// });
-
-// newObserver.observe(gallery.lastElementChild);
