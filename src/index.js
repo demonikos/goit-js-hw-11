@@ -115,7 +115,7 @@ function observerCallback(entries){
       page +=1;
       fetchQuery(searchInput.value, page)
       .then(response => {
-          gallery.insertAdjacentHTML('beforeend', markup(response));
+          // gallery.insertAdjacentHTML('beforeend', markup(response));
           const lastPage = Math.ceil(response.data.totalHits / PER_PAGE);
           // smoothScroll(gallery, 2)
           if (page === lastPage){
@@ -123,8 +123,8 @@ function observerCallback(entries){
             Notify.info(`We're sorry, but you've reached the end of search results.`);            
           }
           if (response.data.totalHits !== 0){
+            gallery.insertAdjacentHTML('beforeend', markup(response));
             smoothScroll(gallery, 2);
-            // gallery.insertAdjacentHTML('beforeend', markup(response));
           }
       })
       .catch(error => console.log(error))
