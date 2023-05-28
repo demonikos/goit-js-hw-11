@@ -117,10 +117,14 @@ function observerCallback(entries){
       .then(response => {
           gallery.insertAdjacentHTML('beforeend', markup(response));
           const lastPage = Math.ceil(response.data.totalHits / PER_PAGE);
-          smoothScroll(gallery, 2)
+          // smoothScroll(gallery, 2)
           if (page === lastPage){
               observer.unobserve(marker);
             Notify.info(`We're sorry, but you've reached the end of search results.`);            
+          }
+          if (response.data.totalHits !== 0){
+            smoothScroll(gallery, 2);
+            // gallery.insertAdjacentHTML('beforeend', markup(response));
           }
       })
       .catch(error => console.log(error))
